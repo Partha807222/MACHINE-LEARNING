@@ -1,0 +1,56 @@
+Submit a project using cluster analysis with any known dataset.
+
+AIM:
+What it aims at is a cluster analysis using the K-Means algorithm on the Mall
+Customers Dataset so that we could group the customers according to their
+demographic and spending behavior. The intention is to point out the various types
+of customers who have the same buying habits.
+ALGORITHM:
+
+The K-Means Algorithm is one of the most popular clustering algorithms that 
+partitions a dataset into K clusters, where each data point is nearest to the centroid 
+of the cluster it is in.
+K-Means Algorithm Steps:
+• Initialization: Randomly select K data points as the initial centroids.
+• Assignment Step: Assign each data point to the closest centroid based on 
+the Euclidean distance.
+• Update Step: Recompute the centroids by calculating the mean of all data 
+points assigned to each cluster.
+• Repeat: Repeat the assignment and update steps until the centroids do not 
+change (convergence).
+• Elbow Method: Use the elbow method to determine the optimal number of 
+clusters by plotting the Within-Cluster Sum of Squares (WCSS) for different 
+values of K.
+
+PROGRAM:
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'class']
+data = pd.read_csv(url, names=names)
+
+scaler = StandardScaler()
+data_scaled = scaler.fit_transform(data.drop('class', axis=1))
+
+kmeans = KMeans(n_clusters=3, random_state=0)
+kmeans.fit(data_scaled)
+
+labels = kmeans.labels_
+
+plt.scatter(data_scaled[:, 0], data_scaled[:, 1], c=labels)
+plt.xlabel('Sepal Length')
+plt.ylabel('Sepal Width')
+plt.title('K-Means Clustering on Iris Dataset')
+plt.show()
+
+RESULT:
+We incompletely implemented the K-Means clustering to the Mall Customers dataset in 
+this project. The process that was followed was Elbow Method the most appropriate of 
+(K=5) for the company, and the segmentation of the customers included their Annual 
+Income and Spending Score. To show this visually, the cluster labels were plotted in a 
+scatter-plot, and the segregation was stored in a CSV file.
+Those with certain groups that have similar characteristics, such as high-income highspenders or low-income low-spenders, can be given the potential to for companies to 
+be able to implement target marketing strategies more effectively.
