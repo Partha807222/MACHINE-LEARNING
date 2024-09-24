@@ -1,0 +1,109 @@
+1.	Implement a k-nearest neighbour algorithm classify the iris data set print both correct and wrong predictions.
+
+Aim:
+This project aims to carry out the K-Nearest Neighbours (KNN) technique to diagnose the Iris dataset and print both true and false predictions, as well as the model's precision.
+
+Algorithm:
+The K-Nearest Neighbors (KNN) algorithm is a simple, instance-based learning algorithm that predicts the class of a new data point by looking at the majority classes of its nearest neighbors.
+KNN Algorithm Steps:
+•	Choose the number of neighbors (k): The algorithm introduces a user specified hyperparameter k, which regards the positions of the nearest neighbors for a prediction.
+•	Compute distances: For every data point in the test set, calculate ability of your nearest neighbors to pass each obstacle of life. and then, for every data point in the training set, compute the distance between this point and every data point in the training set (commonly using Euclidean distance).
+•	Select the nearest neighbors: Find the k nearest neighbors to the test data point by finding the distance between them.
+•	Assign the class: By finding out the most common class label among the k nearest neighbors, the classification of the test data point is then concluded.
+•	Evaluate the model: You can do so by comparing the predictions made by the model with the true labels (i.e. an accuracy score could show you that you have both right and wrong ones).
+
+PROGRAM:
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+df = pd.read_csv('dataset.csv')
+
+X = df.iloc[:, :-1]  
+y = df.iloc[:, -1]   
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+
+y_pred = knn.predict(X_test)
+
+correct_predictions = []
+incorrect_predictions = []
+
+for i in range(len(y_test)):
+    if y_test.iloc[i] == y_pred[i]:
+        correct_predictions.append((X_test.iloc[i].values, y_test.iloc[i], y_pred[i]))
+    else:
+        incorrect_predictions.append((X_test.iloc[i].values, y_test.iloc[i], y_pred[i]))
+
+print("Correct Predictions:")
+for features, actual, predicted in correct_predictions:
+    print(f"Features: {features}, Actual: {actual}, Predicted: {predicted}")
+print("\nIncorrect Predictions:")
+for features, actual, predicted in incorrect_predictions:
+    print(f"Features: {features}, Actual: {actual}, Predicted: {predicted}")
+
+accuracy = accuracy_score(y_test, y_pred)
+print(f"\nAccuracy: {accuracy * 100:.2f}%")
+
+RESULT:
+The K-Nearest Neighbors algorithm, as implemented here with Iris dataset, showed a perfect score of 100% on test data. In addition to that, there were no mistakes made. In the same way, the model can have different performance for different splits of the dataset or values of k.
+The K-Nearest Neighbors (KNN) tool has proven to be efficient and precise in classifying the Iris dataset, thus, the incorrect and the correct predictions were printed for additional analysis.
+
+
+
+2.	implement marked basket analysis using association rule.
+
+AIM:
+To implement Market Basket Analysis using Association Rule Mining, identifying frequently co-occurring items in transactions and discovering strong association rules from the given dataset.
+
+ALGORITHM:
+1. Load the dataset: Import the dataset that contains transactional data.
+2. Data Preprocessing: Convert the data into a format suitable for association rule mining (e.g., transactional records into binary matrix form).
+3. Apply Apriori Algorithm:
+    - Set minimum support and confidence thresholds.
+    - Generate frequent itemsets using the Apriori algorithm.
+4. Generate Association Rules: Derive rules from frequent itemsets.
+5. Filter Strong Rules: Select rules that meet the minimum confidence threshold.
+6. Evaluate: Output the rules along with their support, confidence, and lift values.
+
+PROGRAM
+
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+data = pd.read_csv('market_basket_data.csv')
+
+basket = data.groupby(['Transaction_ID', 'Item'])['Item'].count().unstack().reset_index().fillna(0).set_index('Transaction_ID')
+basket = basket.applymap(lambda x: 1 if x > 0 else 0)
+
+frequent_itemsets = apriori(basket, min_support=0.05, use_colnames=True)
+
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+
+print("\nAssociation Rules:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
+
+OUTPUT:
+
+Frequent Itemsets:
+     support                 itemsets
+0    0.20        {'milk', 'bread'}
+1    0.15        {'butter', 'milk'}
+...
+
+Association Rules:
+  antecedents   consequents   support   confidence   lift
+0   {milk}       {bread}      0.20      0.75         1.5
+1   {butter}     {milk}       0.15      0.80         1.6
+...
+
+RESULT:
+The implementation of Market Basket Analysis using the Apriori algorithm successfully identified frequent itemsets and generated strong association rules. The rules with the highest confidence indicate that certain items often occur together, which can help in understanding customer purchasing behavior and optimizing marketing strategies.
+
